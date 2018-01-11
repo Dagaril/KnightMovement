@@ -1,123 +1,146 @@
-luu= False;ruu= False;ldd= False;rdd= False;lld= False;rrd= False;llu= False;rru = False
-
-xPos = [];yPos=[]; moves = []; possMoves = []
-
-def setDirections():
-    global luu; global ruu; global ldd; global rdd; global lld; global rrd; global llu; global rru
-    luu= False;ruu= False;ldd= False;rdd= False;lld= False;rrd= False;llu= False;rru = False #sets all direction movement to false (will be changed to true if knight can move in any direction)
+def setDirections(arr):
+    arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
+    return arr
 
 
-
-def setMoves(x,y):
-    global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru; global moves 
-    setDirections()
+def setMoves(x,y, arrMoves, arrDirections):
+    arrDirections = setDirections(arrDirections)
     #left one, up/down two
     if x-1>0:
-        if y-2>0 and (len(moves)==0 or moves[len(moves)-1]!="ruu"):
-            ldd = True
-        if y+2<=8 and (len(moves)==0 or moves[len(moves)-1]!="rdd"):
-            luu = True
+        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu"):
+            arrDirections[2] = 1
+        if y+2<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
+            arrDirections[0] = 1
     #right one, up/down two
     if x+1<=8:
-        if y-2>0 and (len(moves)==0 or moves[len(moves)-1]!="luu"):
-            rdd = True
-        if y+2<=8 and (len(moves)==0 or moves[len(moves)-1]!="ldd"):
-            ruu = True
+        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu"):
+            arrDirections[3] = 1
+        if y+2<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
+            arrDirections[1] = 1
     #left two, up/down one
     if x-2>0:
-        if y-1>0 and (len(moves)==0 or moves[len(moves)-1]!="rru"):
-            lld = True
-        if y+1<=8 and (len(moves)==0 or moves[len(moves)-1]!="rrd"):
-            llu = True
+        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru"):
+            arrDirections[4] = 1
+        if y+1<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
+            arrDirections[6] = 1
     #right two, up/down one
     if x+2<=8:
-        if y-1>0 and (len(moves)==0 or moves[len(moves)-1]!="llu"):
-            rrd = True
-        if y+1<=8 and (len(moves)==0 or moves[len(moves)-1]!="lld"):
-            rru = True
-'''
-def checkNumMoves(x,y):                                 #UNNECESSARY CODE?
-    m=0
-    #left one, up/down two
-    if x-1>0:
-        if y-2>0:
-            m=m+1
-        if y+2<=8:
-            m=m+1
-    #right one, up/down two
-    if x+1<8:
-        if y-2>0:
-            m=m+1
-        if y+2<=8:
-            m=m+1
-    #left two, up/down one
-    if x-2>0:
-        if y-1>0:
-            m=m+1
-        if y+1<=8:
-            m=m+1
-    #right two, up/down one
-    if x+2<=8:
-        if y-1>0:
-            m=m+1
-        if y+1<=8:
-            m=m+1
-    return m
-'''
-def move():
-    global x; global y; global moves
-    if ldd == True and (len(moves) == 0 or moves[len(moves)-1]!= "ruu"):
-        moves.append("ldd")
-        x-=1;y-=2
-    elif rdd == True and (len(moves) == 0 or moves[len(moves)-1]!= "luu"):
-        moves.append("rdd")
-        x+=1;y-=2
-    elif lld == True and (len(moves) == 0 or moves[len(moves)-1]!= "rru"):
-        moves.append("lld")
-        x-=2;y-=1
-    elif rrd == True and (len(moves) == 0 or moves[len(moves)-1]!= "llu"):
-        moves.append("rrd")
-        x+=2;y-=1
-    elif luu == True and (len(moves) == 0 or moves[len(moves)-1]!= "rdd"):
-        moves.append("luu")
-        x-=1;y+=2
-    elif ruu == True and (len(moves) == 0 or moves[len(moves)-1]!= "ldd"):
-        moves.append("ruu")
-        x+=1;y+=2
-    elif llu == True and (len(moves) == 0 or moves[len(moves)-1]!= "rrd"):
-        moves.append("llu")
-        x-=2;y+=1
-    elif rru == True and (len(moves) == 0 or moves[len(moves)-1]!= "lld"):
-        moves.append("rru")
-        x+=2;y+=1
-        
-def makeLastMoveFalse():
-    global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru; global moves
-    if moves[len(moves)-1] == "ldd":
-        ldd = False
-    elif moves[len(moves)-1] == "rdd":
-        rdd = False
-    elif moves[len(moves)-1] == "lld":
-        lld = False
-    elif moves[len(moves)-1] == "rrd":
-        rrd = False
-    elif moves[len(moves)-1] == "luu":
-        luu = False
-    elif moves[len(moves)-1] == "ruu":
-        ruu = False
-    elif moves[len(moves)-1] == "llu":
-        llu = False
-    elif moves[len(moves)-1] == "rru":
-        rru = False
-    moves = moves [:-1]
+        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu"):
+            arrDirections[5] = 1
+        if y+1<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
+            arrDirections[7] = 1
+    return arrDirections
 
-def checkIfAllDirectionsFalse():
-    global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru
-    if luu==False and ruu==False and ldd==False and rdd==False and lld==False and rrd==False and llu==False and rru==False:
+
+def move(x,y,arrMoves, arrDirections):
+    if arrDirections[2] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "ruu"):
+        arrMoves.append("ldd")
+        x-=1;y-=2
+    elif arrDirections[3] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "luu"):
+        arrMoves.append("rdd")
+        x+=1;y-=2
+    elif arrDirections[4] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rru"):
+        arrMoves.append("lld")
+        x-=2;y-=1
+    elif arrDirections[5] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "llu"):
+        arrMoves.append("rrd")
+        x+=2;y-=1
+    elif arrDirections[0] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rdd"):
+        arrMoves.append("luu")
+        x-=1;y+=2
+    elif arrDirections[1] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "ldd"):
+        arrMoves.append("ruu")
+        x+=1;y+=2
+    elif arrDirections[6] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rrd"):
+        arrMoves.append("llu")
+        x-=2;y+=1
+    elif arrDirections[8] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "lld"):
+        arrMoves.append("rru")
+        x+=2;y+=1
+    return (x,y,arrMoves,arrDirections)
+
+def makeLastMoveFalse(arrMoves, arrDirections):
+    if arrMoves[len(arrMoves)-1] == "ldd":
+        arrDirections[2] = 0
+    elif arrMoves[len(arrMoves)-1] == "rdd":
+        arrDirections[3] = 0
+    elif arrMoves[len(arrMoves)-1] == "lld":
+        arrDirections[4] = 0
+    elif arrMoves[len(arrMoves)-1] == "rrd":
+        arrDirections[5] = 0
+    elif arrMoves[len(arrMoves)-1] == "luu":
+        arrDirections[0] = 0
+    elif arrMoves[len(arrMoves)-1] == "ruu":
+        arrDirections[1] = 0
+    elif arrMoves[len(arrMoves)-1] == "llu":
+        arrDirections[6] = 0
+    elif arrMoves[len(arrMoves)-1] == "rru":
+        arrDirections[7] = 0
+    arrMoves = arrMoves [:-1]
+    return arrDirections
+
+def checkIfAllDirectionsFalse(arrDirections):
+    if sum(arrDirections)==0:
         return True
     else:
         return False
 
+
+def checkForRepeatLocation(x,y,xPos,yPos):
+    prevX=[];prevY=[]; retBool = False
+    for i in range(0,len(xPos)-1):
+        if xPos[i] == x:
+            prevX.append(i)
+    for z in range(0,len(yPos)-1):
+        if yPos[z] == y:
+            prevY.append(z)
+    for j in range(0,len(prevX)):
+        if prevX[j] in prevY:
+            retBool = True
+    return retBool
+
+def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
+    x=xPos[len(xPos)-2]
+    y=yPos[len(yPos)-2]
+    print("Now at" , x , y)
+    xPos = xPos[:-1]
+    yPos = yPos[:-1]
+    stepNum = len(xPos)-1
+    directions=possMoves[stepNum]
+    possMoves=possMoves[:-1]
+    directions = makeLastMoveFalse(moves,directions)
+    possMoves.append(directions)
+    return(x,y,xPos,yPos,directions,possMoves,moves)
+
+
+xPos = [];yPos=[]; moves = []; possMoves = []; directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
+skipSetMoves = False
+x = 4; y = 5
+xPos.append(x);yPos.append(y)
+directions=setMoves(x,y,moves,directions)
+
+while len(xPos)<64 and len(yPos)<64:
+    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions):
+        if not skipSetMoves:
+            directions = setMoves(x,y,moves,directions)
+            possMoves.append(directions)
+        skipSetMoves = False
+        x,y,moves,directions = move(x,y,moves,directions)
+        xPos.append(x)
+        yPos.append(y)
+        print(x,y)
+    else:
+        if checkForRepeatLocation(x,y,xPos,yPos):
+            print ("\u290A Been Here Before")
+        else:
+            print ("Hit dead end")
+        x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
+        skipSetMoves = True
+
+
+
+
+"""
 def makeListOfDirections():
     global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru
     list1=[]
@@ -157,92 +180,38 @@ def makeListOfDirections():
 
 def readListOfDirections(stepNum):
     global luu; global ruu; global ldd; global rdd; global lld; global rrd; global llu; global rru; global possMoves
-    if possMoves[stepNum][0] == 1:
+    currentPossMoves =possMoves[stepNum]
+    if currentPossMoves[0] == 1:
         luu = True
     else:
         luu = False
-    if possMoves[stepNum][1] == 1:
+    if currentPossMoves[1] == 1:
         ruu = True
     else:
         ruu = False
-    if possMoves[stepNum][2] == 1:
+    if currentPossMoves[2] == 1:
         ldd = True
     else:
         ldd = False
-    if possMoves[stepNum][3] == 1:
+    if currentPossMoves[3] == 1:
         rdd = True
     else:
         rdd = False
-    if possMoves[stepNum][4] == 1:
+    if currentPossMoves[4] == 1:
         lld = True
     else:
         lld = False
-    if possMoves[stepNum][5] == 1:
+    if currentPossMoves[5] == 1:
         rrd = True
     else:
         rrd = False
-    if possMoves[stepNum][6] == 1:
+    if currentPossMoves[6] == 1:
         llu = True
     else:
         llu = False
-    if possMoves[stepNum][7] == 1:
+    if currentPossMoves[7] == 1:
         rru = True
     else:
         rru = False
     possMoves = possMoves[:-1]
-
-def checkForRepeatLocation(x,y):
-    prevX=[];prevY=[]; retBool = False
-    for i in range(0,len(xPos)-1):
-        if xPos[i] == x:
-            prevX.append(i)
-    for z in range(0,len(yPos)-1):
-        if yPos[z] == y:
-            prevY.append(z)
-    for j in range(0,len(prevX)):
-        if prevX[j] in prevY:
-            retBool = True
-    return retBool
-
-def moveOneStepBack():
-    global x; global y; global xPos; global yPos
-    x=xPos[len(xPos)-2]
-    y=yPos[len(yPos)-2]
-    print("Now at" , x , y)
-    xPos = xPos[:-1]
-    yPos = yPos[:-1]
-    stepNum = len(xPos)
-    readListOfDirections(stepNum)
-    makeLastMoveFalse()
-    possMoves.append(makeListOfDirections())
-
-    
-
-skipSetMoves = False
-origX = 4; origY = 5
-x=origX; y=origY
-setMoves(x,y)
-possMoves.append(makeListOfDirections())
-move()
-xPos.append(x)
-yPos.append(y)
-setMoves(x,y)
-
-    
-while len(xPos)<64 and len(yPos)<64:
-    if not checkForRepeatLocation(x,y) and not checkIfAllDirectionsFalse():
-        if not skipSetMoves:
-            setMoves(x,y)
-            possMoves.append(makeListOfDirections())
-        skipSetMoves = False
-        move()
-        xPos.append(x)
-        yPos.append(y)
-        print(x,y)
-    else:
-        if checkForRepeatLocation(x,y):
-            print ("\u290A Been Here Before")
-        else:
-            print ("Hit dead end")
-        moveOneStepBack()        
-        skipSetMoves = True
+"""
