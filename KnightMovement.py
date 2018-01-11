@@ -9,31 +9,31 @@ def setDirections():
 
 
 def setMoves(x,y):
-    global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru 
+    global luu; global ruu; global ldd;global rdd; global lld; global rrd; global llu; global rru; global moves 
     setDirections()
     #left one, up/down two
     if x-1>0:
-        if y-2>0:
+        if y-2>0 and (len(moves)==0 or moves[len(moves)-1]!="ruu"):
             ldd = True
-        if y+2<=8:
+        if y+2<=8 and (len(moves)==0 or moves[len(moves)-1]!="rdd"):
             luu = True
     #right one, up/down two
     if x+1<=8:
-        if y-2>0:
+        if y-2>0 and (len(moves)==0 or moves[len(moves)-1]!="luu"):
             rdd = True
-        if y+2<=8:
+        if y+2<=8 and (len(moves)==0 or moves[len(moves)-1]!="ldd"):
             ruu = True
     #left two, up/down one
     if x-2>0:
-        if y-1>0:
+        if y-1>0 and (len(moves)==0 or moves[len(moves)-1]!="rru"):
             lld = True
-        if y+1<=8:
+        if y+1<=8 and (len(moves)==0 or moves[len(moves)-1]!="rrd"):
             llu = True
     #right two, up/down one
     if x+2<=8:
-        if y-1>0:
+        if y-1>0 and (len(moves)==0 or moves[len(moves)-1]!="llu"):
             rrd = True
-        if y+1<=8:
+        if y+1<=8 and (len(moves)==0 or moves[len(moves)-1]!="lld"):
             rru = True
 '''
 def checkNumMoves(x,y):                                 #UNNECESSARY CODE?
@@ -208,6 +208,7 @@ def moveOneStepBack():
     global x; global y; global xPos; global yPos
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
+    print("Now at" , x , y)
     xPos = xPos[:-1]
     yPos = yPos[:-1]
     stepNum = len(xPos)
@@ -225,12 +226,11 @@ possMoves.append(makeListOfDirections())
 move()
 xPos.append(x)
 yPos.append(y)
-setDirections()
 setMoves(x,y)
 
     
-while x!=origX or y!=origY:
-    while not checkForRepeatLocation(x,y) and not checkIfAllDirectionsFalse():
+while len(xPos)<64 and len(yPos)<64:
+    if not checkForRepeatLocation(x,y) and not checkIfAllDirectionsFalse():
         if not skipSetMoves:
             setMoves(x,y)
             possMoves.append(makeListOfDirections())
@@ -239,37 +239,10 @@ while x!=origX or y!=origY:
         xPos.append(x)
         yPos.append(y)
         print(x,y)
-
-    if checkForRepeatLocation(x,y):
-        print ("\u290A Been Here Before")
     else:
-        print ("Hit dead end")
-    moveOneStepBack()        
-    skipSetMoves = True
-
-'''        
-skipSetMoves = False
-origX = 4; origY = 5
-x=origX+1; y=origY+1
-setMoves(x,y)
-while x!=origX or y!=origY:
-    if checkIfAllDirectionsFalse():
-        x=xPos[len(xPos)-1]
-        y=yPos[len(yPos)-1]
-        xPos=xPos[:-1]
-        yPos=yPos[:-1]
-    if not skipSetMoves:
-        setMoves(x,y)
-    skipSetMoves=False
-    move()
-    if not checkForRepeatLocation(x,y):
-        xPos.append(x);yPos.append(y)
-        setDirections()
-        print(x,y)
-
-    else:
-        makeLastMoveFalse()
+        if checkForRepeatLocation(x,y):
+            print ("\u290A Been Here Before")
+        else:
+            print ("Hit dead end")
+        moveOneStepBack()        
         skipSetMoves = True
-        x=xPos[len(xPos)-1]
-        y=yPos[len(yPos)-1]
-'''        
