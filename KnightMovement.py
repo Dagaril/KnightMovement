@@ -1,4 +1,4 @@
-#3x3
+#4x4
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
