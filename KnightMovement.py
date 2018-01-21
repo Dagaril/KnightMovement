@@ -10,25 +10,25 @@ def setMoves(x,y, arrMoves, arrDirections):
     if x-1>0:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu"):
             arrDirections[2] = 1
-        if y+2<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
+        if y+2<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
             arrDirections[0] = 1
     #right one, up/down two
-    if x+1<=4:
+    if x+1<=3:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu"):
             arrDirections[3] = 1
-        if y+2<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
+        if y+2<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
             arrDirections[1] = 1
     #left two, up/down one
     if x-2>0:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru"):
             arrDirections[4] = 1
-        if y+1<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
+        if y+1<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
             arrDirections[6] = 1
     #right two, up/down one
-    if x+2<=4:
+    if x+2<=3:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu"):
             arrDirections[5] = 1
-        if y+1<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
+        if y+1<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
             arrDirections[7] = 1
     return arrDirections
 
@@ -118,11 +118,11 @@ def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
 
 xPos = [];yPos=[]; moves = []; possMoves = []; directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 skipSetMoves = False
-x = 1; y = 1
+x = 2; y = 3
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
-
-while len(moves)!=12 or not(x==1 and y==3):
+print(x,y)
+while len(moves)!=7 or not(x==1 and y==1):
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions):
         if not skipSetMoves:
             directions = setMoves(x,y,moves,directions)
