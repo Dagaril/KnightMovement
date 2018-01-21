@@ -116,12 +116,19 @@ def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
 
+def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,file):
+    file.write("x:" + str(x));file.write("\ny: "+ str(y))
+    file.write("\nxPos: "+str(xPos))
+    file.write("\nyPos: "+str(yPos))
+    file.write("\ndirections: "+ str(directions))
+    file.write("\npossMoves: " + str(possMoves))
+    file.write("\nmoves: " + str(moves))
+
 xPos = [];yPos=[]; moves = []; possMoves = []; directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 skipSetMoves = False
 x = 1; y = 1
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
-
 while len(moves)!=12 or not(x==1 and y==3):
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions):
         if not skipSetMoves:
@@ -138,7 +145,9 @@ while len(moves)!=12 or not(x==1 and y==3):
             print ("Hit dead end")
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
-    possMovesLen=len(possMoves)
+    textFile = open("log.txt",'w')
+    writeToFile(x,y,xPos,yPos,directions,possMoves,moves, textFile)
+    textFile.close()
 
 print("FINISHED")
 
