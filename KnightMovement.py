@@ -9,25 +9,25 @@ def setMoves(x,y, arrMoves, arrDirections):
     if x-1>0:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu"):
             arrDirections[2] = 1
-        if y+2<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
+        if y+2<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
             arrDirections[0] = 1
     #right one, up/down two
-    if x+1<=8:
+    if x+1<=3:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu"):
             arrDirections[3] = 1
-        if y+2<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
+        if y+2<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
             arrDirections[1] = 1
     #left two, up/down one
     if x-2>0:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru"):
             arrDirections[4] = 1
-        if y+1<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
+        if y+1<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
             arrDirections[6] = 1
     #right two, up/down one
-    if x+2<=8:
+    if x+2<=3:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu"):
             arrDirections[5] = 1
-        if y+1<=8 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
+        if y+1<=3 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
             arrDirections[7] = 1
     return arrDirections
 
@@ -54,30 +54,10 @@ def move(x,y,arrMoves, arrDirections):
     elif arrDirections[6] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rrd"):
         arrMoves.append("llu")
         x-=2;y+=1
-    elif arrDirections[8] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "lld"):
+    elif arrDirections[7] == True and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "lld"):
         arrMoves.append("rru")
         x+=2;y+=1
     return (x,y,arrMoves,arrDirections)
-
-def makeLastMoveFalse(arrMoves, arrDirections):
-    if arrMoves[len(arrMoves)-1] == "ldd":
-        arrDirections[2] = 0
-    elif arrMoves[len(arrMoves)-1] == "rdd":
-        arrDirections[3] = 0
-    elif arrMoves[len(arrMoves)-1] == "lld":
-        arrDirections[4] = 0
-    elif arrMoves[len(arrMoves)-1] == "rrd":
-        arrDirections[5] = 0
-    elif arrMoves[len(arrMoves)-1] == "luu":
-        arrDirections[0] = 0
-    elif arrMoves[len(arrMoves)-1] == "ruu":
-        arrDirections[1] = 0
-    elif arrMoves[len(arrMoves)-1] == "llu":
-        arrDirections[6] = 0
-    elif arrMoves[len(arrMoves)-1] == "rru":
-        arrDirections[7] = 0
-    arrMoves = arrMoves [:-1]
-    return arrDirections
 
 def checkIfAllDirectionsFalse(arrDirections):
     if sum(arrDirections)==0:
@@ -99,35 +79,56 @@ def checkForRepeatLocation(x,y,xPos,yPos):
             retBool = True
     return retBool
 
+def makeLastMoveFalse(arrMoves, arrDirections):
+    if arrMoves[len(arrMoves)-1] == "luu":
+        arrDirections[0] = 0
+    elif arrMoves[len(arrMoves)-1] == "ruu":
+        arrDirections[1] = 0
+    elif arrMoves[len(arrMoves)-1] == "ldd":
+        arrDirections[2] = 0
+    elif arrMoves[len(arrMoves)-1] == "rdd":
+        arrDirections[3] = 0
+    elif arrMoves[len(arrMoves)-1] == "lld":
+        arrDirections[4] = 0
+    elif arrMoves[len(arrMoves)-1] == "rrd":
+        arrDirections[5] = 0
+    elif arrMoves[len(arrMoves)-1] == "llu":
+        arrDirections[6] = 0
+    elif arrMoves[len(arrMoves)-1] == "rru":
+        arrDirections[7] = 0
+    arrMoves = arrMoves [:-1]
+    return (arrDirections, arrMoves)
+
+
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
     print("Now at" , x , y)
     xPos = xPos[:-1]
     yPos = yPos[:-1]
-    stepNum = len(xPos)-1
+    stepNum = len(moves)-1
+#    print(possMoves)
     directions=possMoves[stepNum]
     possMoves=possMoves[:-1]
-    directions = makeLastMoveFalse(moves,directions)
+    directions,moves = makeLastMoveFalse(moves,directions)
     possMoves.append(directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
 
 xPos = [];yPos=[]; moves = []; possMoves = []; directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 skipSetMoves = False
-x = 4; y = 5
+x = 1; y = 1
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
 
-while len(xPos)<64 and len(yPos)<64:
+while len(xPos)!=8 or not(x==2 and y==3):
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions):
         if not skipSetMoves:
             directions = setMoves(x,y,moves,directions)
             possMoves.append(directions)
         skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
-        xPos.append(x)
-        yPos.append(y)
+        xPos.append(x);yPos.append(y)
         print(x,y)
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
@@ -136,7 +137,7 @@ while len(xPos)<64 and len(yPos)<64:
             print ("Hit dead end")
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
-
+    possMovesLen=len(possMoves)
 
 
 
