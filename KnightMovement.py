@@ -1,4 +1,8 @@
-#4x4
+#5x5 (boardSize x boardSize)
+boardSize=5
+startX=1;startY=1
+endX=5;endY=5
+numSteps=25
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
@@ -10,25 +14,25 @@ def setMoves(x,y, arrMoves, arrDirections):
     if x-1>0:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu"):
             arrDirections[2] = 1
-        if y+2<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
+        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
             arrDirections[0] = 1
     #right one, up/down two
-    if x+1<=4:
+    if x+1<=boardSize:
         if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu"):
             arrDirections[3] = 1
-        if y+2<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
+        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
             arrDirections[1] = 1
     #left two, up/down one
     if x-2>0:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru"):
             arrDirections[4] = 1
-        if y+1<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
+        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
             arrDirections[6] = 1
     #right two, up/down one
-    if x+2<=4:
+    if x+2<=boardSize:
         if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu"):
             arrDirections[5] = 1
-        if y+1<=4 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
+        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
             arrDirections[7] = 1
     return arrDirections
 
@@ -115,14 +119,26 @@ def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
 #    possMoves.append(directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
+def finalLocation(steps, x, y, eX, eY, xPos):
+    if x==eX and y==eY and len(xPos)==steps:
+        return True
+    else:
+        return False
 
-def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,file):
+def falseFinal(x,y,eX,eY,xPos,steps):
+    if x==eX and y==eY and len(xPos)<steps:
+        return True
+    return False
+
+
+def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded,file):
     file.write("x:" + str(x));file.write("\ny: "+ str(y))
     file.write("\nxPos: "+str(xPos))
     file.write("\nyPos: "+str(yPos))
     file.write("\ndirections: "+ str(directions))
     file.write("\npossMoves: " + str(possMoves))
     file.write("\nmoves: " + str(moves))
+    file.write("\ndead ends: " + str(ded))
 
 xPos = []
 yPos = []
@@ -130,18 +146,17 @@ moves = []
 possMoves = []
 directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 
-
+deadEnds = []
 
 skipSetMoves = False
-x = 1; y = 1
+x = startX; y = startY
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
-#possMoves.append(directions)
 skipSetMoves=True
-while len(moves)!=12 or not(x==1 and y==3):
-    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and len(moves)!=12:
-#        if not skipSetMoves:
-#            directions = setMoves(x,y,moves,directions)
+while True:
+    if finalLocation(numSteps,x,y,endX,endY,xPos):
+        break
+    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos,numSteps):
         possMoves.append(directions)
         skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
@@ -150,12 +165,15 @@ while len(moves)!=12 or not(x==1 and y==3):
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
             print ("\u290A Been Here Before")
-        else:
+        elif falseFinal(x,y,endX,endY,xPos,numSteps):
+            print("-----------------------------------FALSE FINAL")
+        else:  
             print ("Hit dead end")
+            deadEnds.append([x,y])
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
     textFile = open("log.txt",'w')
-    writeToFile(x,y,xPos,yPos,directions,possMoves,moves, textFile)
+    writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds, textFile)
     textFile.close()
 
 print("FINISHED")
