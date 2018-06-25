@@ -1,8 +1,7 @@
-#5x5 (boardSize x boardSize)
-boardSize=5
-startX=1;startY=5
-endX=3;endY=3
-numSteps=25
+#6x6 (boardSize x boardSize)
+boardSize=6
+startX=1;startY=6
+endX=4;endY=2
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
@@ -119,14 +118,14 @@ def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
 #    possMoves.append(directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
-def finalLocation(steps, x, y, eX, eY, xPos):
-    if x==eX and y==eY and len(xPos)==steps:
+def finalLocation(x, y, eX, eY, xPos):
+    if x==eX and y==eY and len(xPos)==boardSize**2:
         return True
     else:
         return False
 
-def falseFinal(x,y,eX,eY,xPos,steps):
-    if x==eX and y==eY and len(xPos)<steps:
+def falseFinal(x,y,eX,eY,xPos):
+    if x==eX and y==eY and len(xPos)<boardSize**2:
         return True
     return False
 
@@ -141,6 +140,12 @@ def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded):
     file.write("\nmoves: " + str(moves))
     file.write("\ndead ends: " + str(ded))
     file.close()
+
+def noSolution(x,y,directions):
+    global startX, startY
+    if x==startX and y==startY and sum(directions)==0:
+       return True;
+    return False;
 
 
 xPos = []
@@ -157,9 +162,16 @@ xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
 skipSetMoves=True
 while True:
-    if finalLocation(numSteps,x,y,endX,endY,xPos):
+    if finalLocation(x,y,endX,endY,xPos):
         break
-    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos,numSteps):
+    if noSolution(x,y,directions):
+        print("NO SOLUTION")
+        break
+    if x==startX and y==startY and sum(directions)<2 and len(xPos)<2:
+        print("--------------------------RETURNED TO ORIGINAL PLACE-------------------------------")
+        print(directions)
+        break
+    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
         skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
@@ -168,7 +180,7 @@ while True:
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
             print ("\u290A Been Here Before")
-        elif falseFinal(x,y,endX,endY,xPos,numSteps):
+        elif falseFinal(x,y,endX,endY,xPos):
             print("-----------------------------------FALSE FINAL")
         else:  
             print ("Hit dead end")
