@@ -1,7 +1,7 @@
 #5x5 (boardSize x boardSize)
 boardSize=5
-startX=1;startY=1
-endX=5;endY=5
+startX=1;startY=5
+endX=3;endY=3
 numSteps=25
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
@@ -131,7 +131,8 @@ def falseFinal(x,y,eX,eY,xPos,steps):
     return False
 
 
-def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded,file):
+def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded):
+    file = open("log.txt",'w')
     file.write("x:" + str(x));file.write("\ny: "+ str(y))
     file.write("\nxPos: "+str(xPos))
     file.write("\nyPos: "+str(yPos))
@@ -139,6 +140,8 @@ def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded,file):
     file.write("\npossMoves: " + str(possMoves))
     file.write("\nmoves: " + str(moves))
     file.write("\ndead ends: " + str(ded))
+    file.close()
+
 
 xPos = []
 yPos = []
@@ -172,8 +175,6 @@ while True:
             deadEnds.append([x,y])
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
-    textFile = open("log.txt",'w')
-    writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds, textFile)
-    textFile.close()
+    writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds)
 
 print("FINISHED")
