@@ -9,6 +9,7 @@ blank ="square.gif"
 
 def initTurtle():
     turtle.setup(1000,1000)
+    turtle.ht()
     turtle.pen(pencolor="black")
     turtle.pen(pensize=3)
     turtle.speed(5000)
@@ -23,7 +24,7 @@ def initTurtle():
         drto(c*100-400,-boardSize*100+400)
     turtle.Screen().addshape("unicorn.gif")
     turtle.Screen().addshape("square.gif")
-    turtle.shape(pic)
+    turtle.shape(blank)
     
     
     
@@ -36,13 +37,18 @@ def drto(x,y):
     turtle.goto(x,y)
 
 def stampAt(c,r):
+    global step
+    step +=1
     goto((c-1)*100-350,350-(boardSize-r)*100)
-    turtle.shape(pic)
-    turtle.stamp()
+    turtle.write(step, False, "center", ("Arial",16,"normal"))
+#    turtle.shape(pic)
+#    turtle.stamp()
 
 def clearStamp(c,r):
+    global step
+    step-=1
     goto((c-1)*100-350,350-(boardSize-r)*100)
-    turtle.shape(blank)
+#    turtle.shape(blank)
     turtle.stamp()
 
     
@@ -106,7 +112,6 @@ def move(x,y,arrMoves, arrDirections):
         arrMoves.append("rru")
         x+=2;y+=1
     directions = setMoves(x,y,arrMoves,arrDirections)
-    stampAt(x,y)
     return (x,y,arrMoves,directions)
 
 def checkIfAllDirectionsFalse(arrDirections):
@@ -151,17 +156,17 @@ def makeLastMoveFalse(arrMoves, arrDirections):
 
 
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
-    clearStamp(x,y)
+#    global step
+#    step-=1
+#    clearStamp(x,y)
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
     print("Now at" , x , y)
     xPos = xPos[:-1]
     yPos = yPos[:-1]
-#    print(possMoves)
     directions=possMoves[len(possMoves)-1]
     possMoves=possMoves[:-1]
     directions,moves = makeLastMoveFalse(moves,directions)
-#    possMoves.append(directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
 def finalLocation(x, y, eX, eY, xPos):
@@ -202,6 +207,8 @@ xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
 skipSetMoves=True
 initTurtle()
+step=0
+stampAt(x,y)
 while True:
     if finalLocation(x,y,endX,endY,xPos):
         break
@@ -211,14 +218,18 @@ while True:
         x,y,moves,directions = move(x,y,moves,directions)
         xPos.append(x);yPos.append(y)
         print(x,y)
+        if not checkForRepeatLocation(x,y,xPos,yPos)and not falseFinal(x,y,endX,endY,xPos):
+            stampAt(x,y)
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
             print ("\u290A Been Here Before")
         elif falseFinal(x,y,endX,endY,xPos):
             print("-----------------------------------FALSE FINAL")
+#            clearStamp(x,y)
         else:  
             print ("Hit dead end")
             deadEnds.append([x,y])
+            clearStamp(x,y)
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
     writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds)
