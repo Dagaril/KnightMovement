@@ -5,36 +5,28 @@ startX=1;startY=5
 endX=3;endY=3
 pic="unicorn.gif"
 blank ="square.gif"
-#turtle formula: goto(c*sqSize+30,30);drto(c*sqSize+30,boardSize*sqSize+30)
+#turtle formula: goto((c-1)*100-350,350-(boardSize-r)*100)
 
 def initTurtle():
-<<<<<<< HEAD
     turtle.setup(1000,1000)
-=======
-    global sqSize
-    turtle.setup(1000,1000,0,0)
-    winH=turtle.window_height()-30;winW=turtle.window_width()-30
-    turtle.title("Knight's Tour")
-    turtle.setworldcoordinates(0,1000,1000,0)
->>>>>>> 5x5_Board
     turtle.ht()
     turtle.pen(pencolor="black")
     turtle.pen(pensize=3)
-    turtle.speed(0)
-    if(winW<winH):
-        sqSize=winW/(boardSize+1)
-    else:
-        sqSize=winH/(boardSize+1)
+    turtle.speed(5000)
+    goto(-400,400)
     for r in range(0,boardSize+1): #draw horizontal rows
-        goto(30,r*sqSize+30)
-        drto(boardSize*sqSize+30,r*sqSize+30)
-    
+        goto(-400,-r*100+400)
+        
+        drto(boardSize*100-400,-r*100+400)
+    goto(-400,400)
     for c in range(0,boardSize+1): #draw vertical columns
-        goto((c)*sqSize+30,30)
-        drto(c*sqSize+30,boardSize*sqSize+30)
+        goto((c)*100-400,400)
+        drto(c*100-400,-boardSize*100+400)
     turtle.Screen().addshape("unicorn.gif")
     turtle.Screen().addshape("square.gif")
     turtle.shape(blank)
+    
+    
     
 def goto(x,y):
     turtle.pu()
@@ -44,27 +36,14 @@ def goto(x,y):
 def drto(x,y):
     turtle.goto(x,y)
 
-def clearStamp():
-    global step
-    step-=1
-    turtle.undo()
-    turtle.undo()
-    turtle.undo()
-    turtle.undo()
-    
 def stampAt(c,r):
     global step
     step +=1
-<<<<<<< HEAD
     goto((c-1)*100-350,350-(boardSize-r)*100)
-=======
-    goto(c*sqSize,(boardSize-r+1)*sqSize)
->>>>>>> 5x5_Board
     turtle.write(step, False, "center", ("Arial",16,"normal"))
 #    turtle.shape(pic)
 #    turtle.stamp()
 
-<<<<<<< HEAD
 def clearStamp(c,r):
     global step
     step-=1
@@ -72,19 +51,7 @@ def clearStamp(c,r):
 #    turtle.shape(blank)
     turtle.stamp()
 
-<<<<<<< HEAD
     
-=======
->>>>>>> Edited out merge conflicts
-=======
-##def clearStamp(c,r):
-##    global step
-##    step-=1
-##    goto((c-1)*100-350,350-(boardSize-r)*100)
-###    turtle.shape(blank)
-##    turtle.stamp()
-
->>>>>>> 5x5_Board
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
@@ -191,11 +158,7 @@ def makeLastMoveFalse(arrMoves, arrDirections):
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
 #    global step
 #    step-=1
-<<<<<<< HEAD
 #    clearStamp(x,y)
-=======
-#    clearStamp()
->>>>>>> 5x5_Board
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
     print("Now at" , x , y)
@@ -229,12 +192,6 @@ def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded):
     file.write("\ndead ends: " + str(ded))
     file.close()
 
-def noSolution(x,y,directions):
-    global startX, startY
-    if x==startX and y==startY and sum(directions)==0:
-       return True;
-    return False;
-
 
 xPos = []
 yPos = []
@@ -254,23 +211,6 @@ step=0
 stampAt(x,y)
 while True:
     if finalLocation(x,y,endX,endY,xPos):
-<<<<<<< HEAD
-=======
-        break
-    if noSolution(x,y,directions):
-        print("NO SOLUTION")
-        break
-    if x==startX and y==startY and sum(directions)<2 and len(xPos)<2:
-        print("--------------------------RETURNED TO ORIGINAL PLACE-------------------------------")
-        print(directions)
->>>>>>> Edited out merge conflicts
-        break
-    if noSolution(x,y,directions):
-        print("NO SOLUTION")
-        break
-    if x==startX and y==startY and sum(directions)<2 and len(xPos)<2:
-        print("--------------------------RETURNED TO ORIGINAL PLACE-------------------------------")
-        print(directions)
         break
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
@@ -285,19 +225,11 @@ while True:
             print ("\u290A Been Here Before")
         elif falseFinal(x,y,endX,endY,xPos):
             print("-----------------------------------FALSE FINAL")
-<<<<<<< HEAD
 #            clearStamp(x,y)
         else:  
             print ("Hit dead end")
             deadEnds.append([x,y])
             clearStamp(x,y)
-=======
-#            clearStamp()
-        else:  
-            print ("Hit dead end")
-            deadEnds.append([x,y])
-            clearStamp()
->>>>>>> 5x5_Board
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
     writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds)
