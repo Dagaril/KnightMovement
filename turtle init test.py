@@ -1,16 +1,16 @@
 import turtle
 #5x5 (boardSize x boardSize)
-boardSize=8
+boardSize=5
 startX=1;startY=5
 endX=3;endY=3
 pic="unicorn.gif"
 blank ="square.gif"
-#turtle formula: goto(col*100-350,row*100+350)
+#turtle formula: goto(c*sqSize+30,30);drto(c*sqSize+30,boardSize*sqSize+30)
 
 def initTurtle():
     global sqSize
     turtle.setup(1000,1000,0,0)
-    winH=turtle.window_height()-20;winW=turtle.window_width()-20
+    winH=turtle.window_height()-30;winW=turtle.window_width()-30
     turtle.title("Knight's Tour")
     turtle.setworldcoordinates(0,1000,1000,0)
     turtle.ht()
@@ -40,41 +40,25 @@ def goto(x,y):
 def drto(x,y):
     turtle.goto(x,y)
 
-def stampAt(c,r):
-    goto((c-1)*sqSize+80,(boardSize-r+1)*sqSize-30)
-    turtle.shape(pic)
-    turtle.stamp()
-
-def clearStamp(c,r):
-    goto((c-1)*sqSize+80,(boardSize-r+1)*sqSize-30)
-    turtle.shape(blank)
-    turtle.stamp()
-    
-def clr():
+def clearStamp():
+    global step
+    step-=1
     turtle.undo()
+    turtle.undo()
+    turtle.undo()
+    turtle.undo()
+    
+def stampAt(c,r):
+    global step
+    step +=1
+    goto(c*sqSize,(boardSize-r+1)*sqSize)
+    turtle.write(step, False, "center", ("Arial",16,"normal"))
+#    turtle.shape(pic)
+#    turtle.stamp()
 
-
-
-initTurtle()
-stampAt(1,1)
-stampAt(2,2)
-stampAt(1,5)
-stampAt(5,1)
-stampAt(8,8)
-stampAt(8,2)
-clearStamp(1,1)
-while True:
-    clr()
-
-
-
-
-
-
-
-
-
-
-
-
-
+##def clearStamp(c,r):
+##    global step
+##    step-=1
+##    goto((c-1)*100-350,350-(boardSize-r)*100)
+###    turtle.shape(blank)
+##    turtle.stamp()
