@@ -1,8 +1,51 @@
+import turtle
 #5x5 (boardSize x boardSize)
 boardSize=5
 startX=1;startY=5
 endX=3;endY=3
-numSteps=25
+pic="unicorn.gif"
+blank ="square.gif"
+#turtle formula: goto((c-1)*100-350,350-(boardSize-r)*100)
+
+def initTurtle():
+    turtle.setup(1000,1000)
+    turtle.pen(pencolor="black")
+    turtle.pen(pensize=3)
+    turtle.speed(5000)
+    goto(-400,400)
+    for r in range(0,boardSize+1): #draw horizontal rows
+        goto(-400,-r*100+400)
+        
+        drto(boardSize*100-400,-r*100+400)
+    goto(-400,400)
+    for c in range(0,boardSize+1): #draw vertical columns
+        goto((c)*100-400,400)
+        drto(c*100-400,-boardSize*100+400)
+    turtle.Screen().addshape("unicorn.gif")
+    turtle.Screen().addshape("square.gif")
+    turtle.shape(pic)
+    
+    
+    
+def goto(x,y):
+    turtle.pu()
+    turtle.goto(x,y)
+    turtle.pd()
+    
+def drto(x,y):
+    turtle.goto(x,y)
+
+def stampAt(c,r):
+    goto((c-1)*100-350,350-(boardSize-r)*100)
+    turtle.shape(pic)
+    turtle.stamp()
+
+def clearStamp(c,r):
+    goto((c-1)*100-350,350-(boardSize-r)*100)
+    turtle.shape(blank)
+    turtle.stamp()
+
+    
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
@@ -63,6 +106,7 @@ def move(x,y,arrMoves, arrDirections):
         arrMoves.append("rru")
         x+=2;y+=1
     directions = setMoves(x,y,arrMoves,arrDirections)
+    stampAt(x,y)
     return (x,y,arrMoves,directions)
 
 def checkIfAllDirectionsFalse(arrDirections):
@@ -107,6 +151,7 @@ def makeLastMoveFalse(arrMoves, arrDirections):
 
 
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
+    clearStamp(x,y)
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
     print("Now at" , x , y)
@@ -119,14 +164,14 @@ def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
 #    possMoves.append(directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
 
-def finalLocation(steps, x, y, eX, eY, xPos):
-    if x==eX and y==eY and len(xPos)==steps:
+def finalLocation(x, y, eX, eY, xPos):
+    if x==eX and y==eY and len(xPos)==boardSize**2:
         return True
     else:
         return False
 
-def falseFinal(x,y,eX,eY,xPos,steps):
-    if x==eX and y==eY and len(xPos)<steps:
+def falseFinal(x,y,eX,eY,xPos):
+    if x==eX and y==eY and len(xPos)<boardSize**2:
         return True
     return False
 
@@ -156,10 +201,11 @@ x = startX; y = startY
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
 skipSetMoves=True
+initTurtle()
 while True:
-    if finalLocation(numSteps,x,y,endX,endY,xPos):
+    if finalLocation(x,y,endX,endY,xPos):
         break
-    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos,numSteps):
+    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
         skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
@@ -168,7 +214,7 @@ while True:
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
             print ("\u290A Been Here Before")
-        elif falseFinal(x,y,endX,endY,xPos,numSteps):
+        elif falseFinal(x,y,endX,endY,xPos):
             print("-----------------------------------FALSE FINAL")
         else:  
             print ("Hit dead end")
