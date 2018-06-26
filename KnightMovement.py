@@ -51,7 +51,10 @@ def clearStamp(c,r):
 #    turtle.shape(blank)
     turtle.stamp()
 
+<<<<<<< HEAD
     
+=======
+>>>>>>> Edited out merge conflicts
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
@@ -211,6 +214,16 @@ step=0
 stampAt(x,y)
 while True:
     if finalLocation(x,y,endX,endY,xPos):
+<<<<<<< HEAD
+=======
+        break
+    if noSolution(x,y,directions):
+        print("NO SOLUTION")
+        break
+    if x==startX and y==startY and sum(directions)<2 and len(xPos)<2:
+        print("--------------------------RETURNED TO ORIGINAL PLACE-------------------------------")
+        print(directions)
+>>>>>>> Edited out merge conflicts
         break
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
