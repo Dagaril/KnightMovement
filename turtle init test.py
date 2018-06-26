@@ -1,6 +1,6 @@
 import turtle
 #5x5 (boardSize x boardSize)
-boardSize=10
+boardSize=5
 startX=1;startY=5
 endX=3;endY=3
 pic="unicorn.gif"
@@ -55,7 +55,7 @@ stampAt(1,5)
 stampAt(5,1)
 stampAt(8,8)
 stampAt(8,2)
-clearStamp(2,2)
+clearStamp(1,1)
 
 
 
