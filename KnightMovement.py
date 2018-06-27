@@ -1,8 +1,9 @@
 import turtle
+import datetime
 #5x5 (boardSize x boardSize)
-boardSize=5
-startX=1;startY=5
-endX=3;endY=3
+boardSize=6
+startX=1;startY=6
+endX=4;endY=2
 pic="unicorn.gif"
 blank ="square.gif"
 #turtle formula: goto(c*sqSize+30,30);drto(c*sqSize+30,boardSize*sqSize+30)
@@ -39,14 +40,6 @@ def goto(x,y):
     
 def drto(x,y):
     turtle.goto(x,y)
-
-def clearStamp():
-    global step
-    step-=1
-    turtle.undo()
-    turtle.undo()
-    turtle.undo()
-    turtle.undo()
     
 def stampAt(c,r):
     global step
@@ -175,7 +168,7 @@ def makeLastMoveFalse(arrMoves, arrDirections):
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
-    print("Now at" , x , y)
+#    print("Now at" , x , y)
     xPos = xPos[:-1]
     yPos = yPos[:-1]
     directions=possMoves[len(possMoves)-1]
@@ -195,7 +188,7 @@ def falseFinal(x,y,eX,eY,xPos):
     return False
 
 
-def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded):
+def writeToFile(x,y,xPos,yPos,directions,possMoves,moves):
     file = open("log.txt",'w')
     file.write("x:" + str(x));file.write("\ny: "+ str(y))
     file.write("\nxPos: "+str(xPos))
@@ -203,7 +196,6 @@ def writeToFile(x,y,xPos,yPos,directions,possMoves,moves,ded):
     file.write("\ndirections: "+ str(directions))
     file.write("\npossMoves: " + str(possMoves))
     file.write("\nmoves: " + str(moves))
-    file.write("\ndead ends: " + str(ded))
     file.close()
 
 def noSolution(x,y,directions):
@@ -212,14 +204,12 @@ def noSolution(x,y,directions):
        return True;
     return False;
 
-
+print(datetime.datetime.now())
 xPos = []
 yPos = []
 moves = []
 possMoves = []
 directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
-
-deadEnds = []
 
 skipSetMoves = False
 x = startX; y = startY
@@ -235,30 +225,28 @@ while True:
     if noSolution(x,y,directions):
         print("NO SOLUTION")
         break
-    if x==startX and y==startY and sum(directions)<2 and len(xPos)<2:
-        print("--------------------------RETURNED TO ORIGINAL PLACE-------------------------------")
-        print(directions)
-        break
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
         skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
         xPos.append(x);yPos.append(y)
-        print(x,y)
+#        print(x,y)
         if not checkForRepeatLocation(x,y,xPos,yPos)and not falseFinal(x,y,endX,endY,xPos):
             stampAt(x,y)
     else:
         if checkForRepeatLocation(x,y,xPos,yPos):
-            print ("\u290A Been Here Before")
+#            print ("\u290A Been Here Before")
+            pass
         elif falseFinal(x,y,endX,endY,xPos):
-            print("-----------------------------------FALSE FINAL")
+#            print("-----------------------------------FALSE FINAL")
 #            clearStamp()
+            pass
         else:  
-            print ("Hit dead end")
-            deadEnds.append([x,y])
+#            print ("Hit dead end")
             clearStamp()
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
         skipSetMoves = True
-    writeToFile(x,y,xPos,yPos,directions,possMoves,moves,deadEnds)
+    writeToFile(x,y,xPos,yPos,directions,possMoves,moves)
 
 print("FINISHED")
+print(datetime.datetime.now())
