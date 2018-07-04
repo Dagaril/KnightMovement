@@ -1,9 +1,9 @@
 import turtle
 import datetime
 #5x5 (boardSize x boardSize)
-boardSize=6
-startX=1;startY=6
-endX=4;endY=2
+boardSize=7
+startX=1;startY=7
+endX=2;endY=6
 pic="unicorn.gif"
 blank ="square.gif"
 #turtle formula: goto(c*sqSize+30,30);drto(c*sqSize+30,boardSize*sqSize+30)
@@ -187,15 +187,29 @@ def falseFinal(x,y,eX,eY,xPos):
         return True
     return False
 
+def moveNum(x):
+    return{
+        'luu':0,
+        'ruu':1,
+        'ldd':2,
+        'rdd':3,
+        'lld':4,
+        'rrd':5,
+        'llu':6,
+        'rru':7
+        }[x]
+
 
 def writeToFile(x,y,xPos,yPos,directions,possMoves,moves):
     file = open("log.txt",'w')
     file.write("x:" + str(x));file.write("\ny: "+ str(y))
+    file.write("\ndirections: "+ str(directions))
     file.write("\nxPos: "+str(xPos))
     file.write("\nyPos: "+str(yPos))
-    file.write("\ndirections: "+ str(directions))
-    file.write("\npossMoves: " + str(possMoves))
-    file.write("\nmoves: " + str(moves))
+    file.write("\nx,y:         possMoves:                 moves:")
+    for i in range(0,len(possMoves)):
+        file.write("\n"+str(xPos[i])+","+str(yPos[i])+"  "+str(possMoves[i])+"         "+str(moveNum(moves[i]))+"  "+str(moves[i]))
+    file.write("\n"+str(xPos[len(xPos)-1])+","+str(yPos[len(yPos)-1]))
     file.close()
 
 def noSolution(x,y,directions):
@@ -211,11 +225,9 @@ moves = []
 possMoves = []
 directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 
-skipSetMoves = False
 x = startX; y = startY
 xPos.append(x);yPos.append(y)
 directions=setMoves(x,y,moves,directions)
-skipSetMoves=True
 initTurtle()
 step=0
 stampAt(x,y)
@@ -227,7 +239,6 @@ while True:
         break
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
-        skipSetMoves = False
         x,y,moves,directions = move(x,y,moves,directions)
         xPos.append(x);yPos.append(y)
 #        print(x,y)
@@ -245,7 +256,6 @@ while True:
 #            print ("Hit dead end")
             clearStamp()
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
-        skipSetMoves = True
     writeToFile(x,y,xPos,yPos,directions,possMoves,moves)
 
 print("FINISHED")
