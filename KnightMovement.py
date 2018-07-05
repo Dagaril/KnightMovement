@@ -54,75 +54,88 @@ def clearStamp():
     step-=1
     for i in range(4):
         turtle.undo()
-    
-##def clearStamp(c,r):
-##    global step
-##    step-=1
-##    goto((c-1)*100-350,350-(boardSize-r)*100)
-###    turtle.shape(blank)
-##    turtle.stamp()
 
 def setDirections(arr):
     arr=[0,0,0,0,0,0,0,0] #sets all direction movement to false (will be changed to true if knight can move in any direction)
     return arr
 
 
-def setMoves(x,y, arrMoves, arrDirections):
+def setMoves(x,y, arrMoves, arrDirections,prevX,prevY):
     arrDirections = setDirections(arrDirections)
     #left one, up/down two
     if x-1>0:
-        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu"):
+        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ruu")and not (x-1==prevX and y-2==prevY):
             arrDirections[2] = 1
-        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd"):
+        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rdd")and not (x-1==prevX and y+2==prevY):
             arrDirections[0] = 1
     #right one, up/down two
     if x+1<=boardSize:
-        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu"):
+        if y-2>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="luu")and not (x+1==prevX and y-2==prevY):
             arrDirections[3] = 1
-        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd"):
+        if y+2<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="ldd")and not (x+1==prevX and y+2==prevY):
             arrDirections[1] = 1
     #left two, up/down one
     if x-2>0:
-        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru"):
+        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rru")and not (x-2==prevX and y-1==prevY):
             arrDirections[4] = 1
-        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd"):
+        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="rrd")and not (x-2==prevX and y+1==prevY):
             arrDirections[6] = 1
+
     #right two, up/down one
     if x+2<=boardSize:
-        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu"):
+        if y-1>0 and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="llu")and not (x+2==prevX and y-1==prevY):
             arrDirections[5] = 1
-        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld"):
+        if y+1<=boardSize and (len(arrMoves)==0 or arrMoves[len(arrMoves)-1]!="lld")and not (x+2==prevX and y+1==prevY):
             arrDirections[7] = 1
     return arrDirections
 
+def directionsDict(index,x,y):
+    if(index==0):
+        return x-1,y+2
+    elif(index==1):
+        return x+1,y+2
+    elif(index==2):
+        return x-1,y-2
+    elif(index==3):
+        return x+1,y-2
+    elif(index==4):
+        return x-2,y-1
+    elif(index==5):
+        return x+2,y-1
+    elif(index==6):
+        return x-2,y+1
+    elif(index==7):
+        return x+2,y+1
 
-def move(x,y,arrMoves, arrDirections):
-    if arrDirections[2] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "ruu"):
-        arrMoves.append("ldd")
-        x-=1;y-=2
-    elif arrDirections[3] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "luu"):
-        arrMoves.append("rdd")
-        x+=1;y-=2
-    elif arrDirections[4] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rru"):
-        arrMoves.append("lld")
-        x-=2;y-=1
-    elif arrDirections[5] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "llu"):
-        arrMoves.append("rrd")
-        x+=2;y-=1
-    elif arrDirections[0] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rdd"):
-        arrMoves.append("luu")
-        x-=1;y+=2
-    elif arrDirections[1] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "ldd"):
-        arrMoves.append("ruu")
-        x+=1;y+=2
-    elif arrDirections[6] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "rrd"):
-        arrMoves.append("llu")
-        x-=2;y+=1
-    elif arrDirections[7] == 1 and (len(arrMoves) == 0 or arrMoves[len(arrMoves)-1]!= "lld"):
-        arrMoves.append("rru")
-        x+=2;y+=1
-    directions = setMoves(x,y,arrMoves,arrDirections)
+def indexToMove(x):
+    return{
+        0:'luu',
+        1:'ruu',
+        2:'ldd',
+        3:'rdd',
+        4:'lld',
+        5:'rrd',
+        6:'llu',
+        7:'rru'
+        }[x]
+
+def move(x,y,arrMoves, arrDirections,prevX,prevY):
+    if(sum(arrDirections)==1):
+        x,y=directionsDict(arrDirections.index(1),x,y)
+        arrMoves.append(indexToMove(arrDirections.index(1)))
+        directions = setMoves(x,y,arrMoves,arrDirections,prevX,prevY)
+        return (x,y,arrMoves,directions)
+    numMovesInDir=[0,0,0,0,0,0,0,0]
+    for i in range(len(arrDirections)):
+        if(arrDirections[i]==1):
+            tempX,tempY=directionsDict(i,x,y)
+            numMovesInDir[i]=sum(setMoves(tempX,tempY,arrMoves,arrDirections,x,y))
+    minI=numMovesInDir.index(min(x for x in numMovesInDir if x > 0))
+    x,y=directionsDict(minI,x,y)
+    arrMoves.append(indexToMove(minI))
+    directions = setMoves(x,y,arrMoves,arrDirections,prevX,prevY)
     return (x,y,arrMoves,directions)
+
 
 def checkIfAllDirectionsFalse(arrDirections):
     if sum(arrDirections)==0:
@@ -227,7 +240,7 @@ directions = [0,0,0,0,0,0,0,0] #[luu,ruu,ldd,rdd,lld,rrd,llu,rru]
 
 x = startX; y = startY
 xPos.append(x);yPos.append(y)
-directions=setMoves(x,y,moves,directions)
+directions=setMoves(x,y,moves,directions,60,60)
 initTurtle()
 step=0
 stampAt(x,y)
@@ -239,9 +252,8 @@ while True:
         break
     if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
         possMoves.append(directions)
-        x,y,moves,directions = move(x,y,moves,directions)
+        x,y,moves,directions = move(x,y,moves,directions,xPos[len(xPos)-1],yPos[len(yPos)-1])
         xPos.append(x);yPos.append(y)
-#        print(x,y)
         if not checkForRepeatLocation(x,y,xPos,yPos)and not falseFinal(x,y,endX,endY,xPos):
             stampAt(x,y)
     else:
