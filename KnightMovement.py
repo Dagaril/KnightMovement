@@ -1,10 +1,8 @@
 import turtle
 import datetime
 #5x5 (boardSize x boardSize)
-boardSize=4
-startX=3;startY=3
-pic="unicorn.gif"
-blank ="square.gif"
+boardSize=5
+startX=4;startY=3
 #turtle formula: goto(c*sqSize,(boardSize-r+1)*sqSize)
 
 def initTurtle():
@@ -24,13 +22,9 @@ def initTurtle():
     for r in range(0,boardSize+1): #draw horizontal rows
         goto(30,r*sqSize+30)
         drto(boardSize*sqSize+30,r*sqSize+30)
-    
     for c in range(0,boardSize+1): #draw vertical columns
         goto((c)*sqSize+30,30)
         drto(c*sqSize+30,boardSize*sqSize+30)
-    turtle.Screen().addshape("unicorn.gif")
-    turtle.Screen().addshape("square.gif")
-    turtle.shape(blank)
     
 def goto(x,y):
     turtle.pu()
@@ -43,7 +37,7 @@ def drto(x,y):
 def stampAt(c,r):
     global step
     step +=1
-    goto(c*sqSize-sqSize/4,(boardSize-r+1)*sqSize-sqSize/6)
+    goto(c*sqSize,(boardSize-r+1)*sqSize)
     turtle.write(step, False, "center", ("Arial",16,"normal"))
 
 def clearStamp():
