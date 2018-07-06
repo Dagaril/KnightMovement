@@ -1,12 +1,11 @@
 import turtle
 import datetime
 #5x5 (boardSize x boardSize)
-boardSize=7
-startX=1;startY=7
-endX=2;endY=6
+boardSize=4
+startX=3;startY=3
 pic="unicorn.gif"
 blank ="square.gif"
-#turtle formula: goto(c*sqSize+30,30);drto(c*sqSize+30,boardSize*sqSize+30)
+#turtle formula: goto(c*sqSize,(boardSize-r+1)*sqSize)
 
 def initTurtle():
     global sqSize
@@ -44,10 +43,8 @@ def drto(x,y):
 def stampAt(c,r):
     global step
     step +=1
-    goto(c*sqSize,(boardSize-r+1)*sqSize)
+    goto(c*sqSize-sqSize/4,(boardSize-r+1)*sqSize-sqSize/6)
     turtle.write(step, False, "center", ("Arial",16,"normal"))
-#    turtle.shape(pic)
-#    turtle.stamp()
 
 def clearStamp():
     global step
@@ -181,24 +178,12 @@ def makeLastMoveFalse(arrMoves, arrDirections):
 def moveOneStepBack(x,y,xPos,yPos, directions, possMoves,moves):
     x=xPos[len(xPos)-2]
     y=yPos[len(yPos)-2]
-#    print("Now at" , x , y)
     xPos = xPos[:-1]
     yPos = yPos[:-1]
     directions=possMoves[len(possMoves)-1]
     possMoves=possMoves[:-1]
     directions,moves = makeLastMoveFalse(moves,directions)
     return(x,y,xPos,yPos,directions,possMoves,moves)
-
-def finalLocation(x, y, eX, eY, xPos):
-    if x==eX and y==eY and len(xPos)==boardSize**2:
-        return True
-    else:
-        return False
-
-def falseFinal(x,y,eX,eY,xPos):
-    if x==eX and y==eY and len(xPos)<boardSize**2:
-        return True
-    return False
 
 def moveNum(x):
     return{
@@ -211,7 +196,6 @@ def moveNum(x):
         'llu':6,
         'rru':7
         }[x]
-
 
 def writeToFile(x,y,xPos,yPos,directions,possMoves,moves):
     file = open("log.txt",'w')
@@ -245,27 +229,19 @@ initTurtle()
 step=0
 stampAt(x,y)
 while True:
-    if finalLocation(x,y,endX,endY,xPos):
+    if step==boardSize**2:
         break
     if noSolution(x,y,directions):
         print("NO SOLUTION")
         break
-    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions) and not falseFinal(x,y,endX,endY,xPos):
+    if not checkForRepeatLocation(x,y,xPos,yPos) and not checkIfAllDirectionsFalse(directions):
         possMoves.append(directions)
         x,y,moves,directions = move(x,y,moves,directions,xPos[len(xPos)-1],yPos[len(yPos)-1])
         xPos.append(x);yPos.append(y)
-        if not checkForRepeatLocation(x,y,xPos,yPos)and not falseFinal(x,y,endX,endY,xPos):
+        if not checkForRepeatLocation(x,y,xPos,yPos):
             stampAt(x,y)
     else:
-        if checkForRepeatLocation(x,y,xPos,yPos):
-#            print ("\u290A Been Here Before")
-            pass
-        elif falseFinal(x,y,endX,endY,xPos):
-#            print("-----------------------------------FALSE FINAL")
-#            clearStamp()
-            pass
-        else:  
-#            print ("Hit dead end")
+        if not checkForRepeatLocation(x,y,xPos,yPos):
             clearStamp()
         x,y,xPos,yPos,directions,possMoves,moves=moveOneStepBack(x,y,xPos,yPos, directions, possMoves, moves)
     writeToFile(x,y,xPos,yPos,directions,possMoves,moves)
